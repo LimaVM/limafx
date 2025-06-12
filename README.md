@@ -51,3 +51,7 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 cd backend
 npm install
 node index.js
+```
+
+### 3. Acessar a interface
+Abra `http://localhost:3000` no seu navegador.
