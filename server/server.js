@@ -19,7 +19,7 @@ fs.mkdirSync(uploadDir, { recursive: true });
 fs.mkdirSync(outputDir, { recursive: true });
 
 app.use(cors());
-app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/output', express.static(outputDir));
 
 const upload = multer({ dest: uploadDir });

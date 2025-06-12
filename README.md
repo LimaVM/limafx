@@ -48,14 +48,15 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 - Navegador moderno (Chrome, Firefox, Edge)
 - O FFmpeg é baixado automaticamente com o pacote `ffmpeg-static`
 
-### 2. Iniciar o backend
+### 2. Iniciar o servidor
 ```bash
-cd backend
+cd server
 npm install
 npm start
 ```
 
 ### 3. Acessar a interface
 Abra `http://localhost:3000` no seu navegador. Os arquivos processados
-ficam disponíveis na pasta `backend/output` e também podem ser acessados
+ficam disponíveis na pasta `server/output` e também podem ser acessados
 pelo navegador via `/output/arquivo`.
+O frontend fica em `server/public` e é servido automaticamente.
