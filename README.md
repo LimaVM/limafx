@@ -43,9 +43,9 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 ## ⚙️ Como Rodar o Projeto
 
 ### 1. Requisitos
-- **Ubuntu 22.04+**
-  - `sudo apt-get install nodejs npm`
-  - `sudo apt-get install build-essential`
+- **Node.js 16+ e npm**
+  - **Ubuntu:** `sudo apt-get install nodejs npm` e `sudo apt-get install build-essential`
+  - **Windows:** instale a versão LTS em [nodejs.org](https://nodejs.org/). Se algum pacote falhar na instalação, execute `npm install -g windows-build-tools` em um terminal administrador.
 - Navegador moderno (Chrome, Firefox, Edge)
 - O FFmpeg é baixado automaticamente com o pacote `ffmpeg-static`
 
@@ -67,7 +67,7 @@ Ao iniciar, o servidor tenta detectar se existe uma GPU disponível com o pacote
 `-hwaccel auto` para usar aceleração. Caso contrário, uma mensagem informa que
 somente o CPU será utilizado.
 
-Para hospedar em produção no Linux recomendamos usar um gerenciador de
+Para hospedar em produção no Linux ou Windows recomendamos usar um gerenciador de
 processos como `pm2`:
 
 ```bash
