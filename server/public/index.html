@@ -7,35 +7,45 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 40px; }
     form { margin-bottom: 20px; }
+    input[type="file"] { margin-right: 10px; }
+    .result a { display: block; margin-top: 5px; }
   </style>
 </head>
 <body>
   <h1>LimaFX</h1>
+  <p>Selecione uma imagem ou vídeo e clique em Enviar. Um link para o resultado
+  aparecerá abaixo.</p>
 
   <h2>Enviar imagem</h2>
   <form id="imgForm">
     <input type="file" name="file" accept="image/*" required />
     <button type="submit">Enviar</button>
   </form>
-  <div id="imgResult"></div>
+  <div id="imgResult" class="result"></div>
 
   <h2>Enviar vídeo</h2>
   <form id="vidForm">
     <input type="file" name="file" accept="video/*" required />
     <button type="submit">Enviar</button>
   </form>
-  <div id="vidResult"></div>
+  <div id="vidResult" class="result"></div>
 
 <script>
 async function sendForm(form, url, resultEl) {
+  resultEl.textContent = 'Processando...';
   const data = new FormData(form);
   const res = await fetch(url, {
     method: 'POST',
     body: data
   });
   const json = await res.json();
+  resultEl.textContent = '';
   if (json.success) {
-    resultEl.textContent = `Arquivo processado: ${json.file}`;
+    const link = document.createElement('a');
+    link.href = json.file;
+    link.textContent = 'Baixar arquivo processado';
+    link.target = '_blank';
+    resultEl.appendChild(link);
   } else {
     resultEl.textContent = `Erro: ${json.error}`;
   }

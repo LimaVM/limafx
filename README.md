@@ -35,6 +35,7 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 - `express` – servidor HTTP
 - `multer` – upload de arquivos
 - `fs`, `path` – manipulação de arquivos
+- `systeminformation` – detecção de GPU
 - Organização e cache por IP do usuário
 
 ---
@@ -42,9 +43,12 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 ## ⚙️ Como Rodar o Projeto
 
 ### 1. Requisitos
-- Ubuntu 22.04 ou superior
-- Node.js 18+ instalado (`sudo apt-get install nodejs npm`)
-- `build-essential` para compilar dependências nativas (`sudo apt-get install build-essential`)
+- **Ubuntu 22.04+**
+  - `sudo apt-get install nodejs npm`
+  - `sudo apt-get install build-essential`
+- **Windows 10/11**
+  - Baixe o Node.js 18+ em [nodejs.org](https://nodejs.org)
+  - Execute `npm install --global windows-build-tools` em um terminal administrador
 - Navegador moderno (Chrome, Firefox, Edge)
 - O FFmpeg é baixado automaticamente com o pacote `ffmpeg-static`
 
@@ -60,3 +64,16 @@ Abra `http://localhost:3000` no seu navegador. Os arquivos processados
 ficam disponíveis na pasta `server/output` e também podem ser acessados
 pelo navegador via `/output/arquivo`.
 O frontend fica em `server/public` e é servido automaticamente.
+
+Ao iniciar, o servidor tenta detectar se existe uma GPU disponível com o pacote
+`systeminformation`. Se houver, o FFmpeg é executado com a opção
+`-hwaccel auto` para usar aceleração. Caso contrário, uma mensagem informa que
+somente o CPU será utilizado.
+
+Para hospedar em produção no Linux recomendamos usar um gerenciador de
+processos como `pm2`:
+
+```bash
+npm install -g pm2
+pm2 start server/server.js
+```
