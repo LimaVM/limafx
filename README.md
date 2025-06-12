@@ -46,9 +46,6 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 - **Ubuntu 22.04+**
   - `sudo apt-get install nodejs npm`
   - `sudo apt-get install build-essential`
-- **Windows 10/11**
-  - Baixe o Node.js 18+ em [nodejs.org](https://nodejs.org)
-  - Execute `npm install --global windows-build-tools` em um terminal administrador
 - Navegador moderno (Chrome, Firefox, Edge)
 - O FFmpeg é baixado automaticamente com o pacote `ffmpeg-static`
 
