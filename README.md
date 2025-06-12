@@ -19,8 +19,7 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 ## 🧰 Tecnologias Utilizadas
 
 ### 🎨 Imagens
-- `sharp` – resize, crop, rotação, formatos
-- `jimp` – filtros como blur, pixelate, sepia, grayscale
+- `sharp` – resize, crop, rotação, formatos e filtros
 - `node-canvas` – desenhar textos, shapes, overlays
 - `color-thief-node` – extrair cor dominante de uma imagem
 - `tesseract.js` – reconhecimento de texto (OCR)
@@ -61,6 +60,11 @@ Abra `http://localhost:3000` no seu navegador. Os arquivos processados
 ficam disponíveis na pasta `server/output` e também podem ser acessados
 pelo navegador via `/output/arquivo`.
 O frontend fica em `server/public` e é servido automaticamente.
+
+### 4. Recursos da Interface
+- Escolha o efeito desejado antes de enviar o arquivo
+- Visualize o resultado em modo escuro diretamente na página
+- Depois do preview, baixe o arquivo final com um clique
 
 Ao iniciar, o servidor tenta detectar se existe uma GPU disponível com o pacote
 `systeminformation`. Se houver, o FFmpeg é executado com a opção

@@ -1,7 +1,6 @@
 const express = require('express');
 const multer = require('multer');
 const sharp = require('sharp');
-const jimp = require('jimp');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('ffmpeg-static');
 const path = require('path');
@@ -37,13 +36,35 @@ app.use('/output', express.static(outputDir));
 
 const upload = multer({ dest: uploadDir });
 
-// Upload and grayscale an image
+const imageEffects = {
+  grayscale: pipeline => pipeline.grayscale(),
+  invert: pipeline => pipeline.negate(),
+  rotate: pipeline => pipeline.rotate(90)
+};
+
+const videoEffects = {
+  trim: command => command.setStartTime('0').setDuration(5),
+  grayscale: command => command.videoFilters('hue=s=0'),
+  mirror: command => command.videoFilters('hflip')
+};
+
+app.get('/api/effects', (req, res) => {
+  res.json({
+    image: Object.keys(imageEffects),
+    video: Object.keys(videoEffects)
+  });
+});
+
+// Upload an image and apply selected effect
 app.post('/api/image', upload.single('file'), async (req, res) => {
+  const effect = req.query.effect || 'grayscale';
   const inputPath = req.file.path;
-  const outputPath = path.join(outputDir, `${req.file.filename}-gray.png`);
+  const outputPath = path.join(outputDir, `${req.file.filename}-${effect}.png`);
 
   try {
-    await sharp(inputPath).grayscale().toFile(outputPath);
+    const pipeline = sharp(inputPath);
+    (imageEffects[effect] || imageEffects.grayscale)(pipeline);
+    await pipeline.toFile(outputPath);
     res.json({ success: true, file: `/output/${path.basename(outputPath)}` });
   } catch (err) {
     console.error(err);
@@ -53,17 +74,18 @@ app.post('/api/image', upload.single('file'), async (req, res) => {
   }
 });
 
-// Upload and trim a video to first 5 seconds
+// Upload a video and apply selected effect
 app.post('/api/video', upload.single('file'), (req, res) => {
+  const effect = req.query.effect || 'trim';
   const inputPath = req.file.path;
-  const outputPath = path.join(outputDir, `${req.file.filename}-trim.mp4`);
+  const outputPath = path.join(outputDir, `${req.file.filename}-${effect}.mp4`);
 
-  const command = ffmpeg(inputPath)
-    .setStartTime('0')
-    .setDuration(5);
+  const command = ffmpeg(inputPath);
   if (useGPU) {
     command.addOption('-hwaccel', 'auto');
   }
+  (videoEffects[effect] || videoEffects.trim)(command);
+
   command.output(outputPath)
     .on('end', () => {
       fs.unlink(inputPath, () => {});
