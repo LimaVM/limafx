@@ -42,16 +42,20 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 ## ⚙️ Como Rodar o Projeto
 
 ### 1. Requisitos
-- Node.js instalado
-- FFmpeg instalado (ou usando `ffmpeg-static`)
+- Ubuntu 22.04 ou superior
+- Node.js 18+ instalado (`sudo apt-get install nodejs npm`)
+- `build-essential` para compilar dependências nativas (`sudo apt-get install build-essential`)
 - Navegador moderno (Chrome, Firefox, Edge)
+- O FFmpeg é baixado automaticamente com o pacote `ffmpeg-static`
 
 ### 2. Iniciar o backend
 ```bash
 cd backend
 npm install
-node index.js
+npm start
 ```
 
 ### 3. Acessar a interface
-Abra `http://localhost:3000` no seu navegador.
+Abra `http://localhost:3000` no seu navegador. Os arquivos processados
+ficam disponíveis na pasta `backend/output` e também podem ser acessados
+pelo navegador via `/output/arquivo`.

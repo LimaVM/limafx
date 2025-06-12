@@ -13,15 +13,21 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 const app = express();
 const port = process.env.PORT || 3000;
 
+const uploadDir = path.join(__dirname, 'uploads');
+const outputDir = path.join(__dirname, 'output');
+fs.mkdirSync(uploadDir, { recursive: true });
+fs.mkdirSync(outputDir, { recursive: true });
+
 app.use(cors());
 app.use(express.static(path.join(__dirname, '../frontend')));
+app.use('/output', express.static(outputDir));
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: uploadDir });
 
 // Upload and grayscale an image
 app.post('/api/image', upload.single('file'), async (req, res) => {
   const inputPath = req.file.path;
-  const outputPath = path.join('output', `${req.file.filename}-gray.png`);
+  const outputPath = path.join(outputDir, `${req.file.filename}-gray.png`);
 
   try {
     await sharp(inputPath).grayscale().toFile(outputPath);
@@ -37,7 +43,7 @@ app.post('/api/image', upload.single('file'), async (req, res) => {
 // Upload and trim a video to first 5 seconds
 app.post('/api/video', upload.single('file'), (req, res) => {
   const inputPath = req.file.path;
-  const outputPath = path.join('output', `${req.file.filename}-trim.mp4`);
+  const outputPath = path.join(outputDir, `${req.file.filename}-trim.mp4`);
 
   ffmpeg(inputPath)
     .setStartTime('0')
