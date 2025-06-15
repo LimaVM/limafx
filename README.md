@@ -19,8 +19,7 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 ## 🧰 Tecnologias Utilizadas
 
 ### 🎨 Imagens
-- `sharp` – resize, crop, rotação, formatos
-- `jimp` – filtros como blur, pixelate, sepia, grayscale
+- `sharp` – resize, crop, rotação, formatos e filtros
 - `node-canvas` – desenhar textos, shapes, overlays
 - `color-thief-node` – extrair cor dominante de uma imagem
 - `tesseract.js` – reconhecimento de texto (OCR)
@@ -35,6 +34,7 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 - `express` – servidor HTTP
 - `multer` – upload de arquivos
 - `fs`, `path` – manipulação de arquivos
+- `systeminformation` – detecção de GPU
 - Organização e cache por IP do usuário
 
 ---
@@ -42,12 +42,39 @@ Edite **imagens e vídeos** com tudo que o Node.js tem de melhor. Sem limites, s
 ## ⚙️ Como Rodar o Projeto
 
 ### 1. Requisitos
-- Node.js instalado
-- FFmpeg instalado (ou usando `ffmpeg-static`)
+- **Node.js 16+ e npm**
+  - **Ubuntu:** `sudo apt-get install nodejs npm` e `sudo apt-get install build-essential`
+  - **Windows:** instale a versão LTS em [nodejs.org](https://nodejs.org/). Se algum pacote falhar na instalação, execute `npm install -g windows-build-tools` em um terminal administrador.
 - Navegador moderno (Chrome, Firefox, Edge)
+- O FFmpeg é baixado automaticamente com o pacote `ffmpeg-static`
 
-### 2. Iniciar o backend
+### 2. Iniciar o servidor
 ```bash
-cd backend
+cd server
 npm install
-node index.js
+npm start
+```
+
+### 3. Acessar a interface
+Abra `http://localhost:3000` no seu navegador. Os arquivos processados
+ficam disponíveis na pasta `server/output` e também podem ser acessados
+pelo navegador via `/output/arquivo`.
+O frontend fica em `server/public` e é servido automaticamente.
+
+### 4. Recursos da Interface
+- Escolha o efeito desejado antes de enviar o arquivo
+- Visualize o resultado em modo escuro diretamente na página
+- Depois do preview, baixe o arquivo final com um clique
+
+Ao iniciar, o servidor tenta detectar se existe uma GPU disponível com o pacote
+`systeminformation`. Se houver, o FFmpeg é executado com a opção
+`-hwaccel auto` para usar aceleração. Caso contrário, uma mensagem informa que
+somente o CPU será utilizado.
+
+Para hospedar em produção no Linux ou Windows recomendamos usar um gerenciador de
+processos como `pm2`:
+
+```bash
+npm install -g pm2
+pm2 start server/server.js
+```

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LimaFX</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #121212;
+      color: #eee;
+    }
+    h1, h2 { text-align: center; }
+    .container { max-width: 700px; margin: auto; }
+    form { margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    input[type="file"], select, button { flex: 1 1 auto; }
+    button { padding: 8px 16px; background: #333; color: #fff; border: none; cursor: pointer; }
+    button:hover { background: #444; }
+    .result { margin-bottom: 30px; }
+    .result a { display: block; margin-top: 5px; color: #8ab4f8; }
+    img, video { max-width: 100%; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>LimaFX</h1>
+    <p>Selecione uma imagem ou vídeo, escolha o efeito e clique em Enviar. Veja o preview e depois baixe o arquivo.</p>
+
+    <h2>Imagem</h2>
+    <form id="imgForm">
+      <input type="file" name="file" accept="image/*" required />
+      <select id="imgEffect"></select>
+      <button type="submit">Enviar</button>
+    </form>
+    <div id="imgResult" class="result"></div>
+
+    <h2>Vídeo</h2>
+    <form id="vidForm">
+      <input type="file" name="file" accept="video/*" required />
+      <select id="vidEffect"></select>
+      <button type="submit">Enviar</button>
+    </form>
+    <div id="vidResult" class="result"></div>
+  </div>
+
+<script>
+async function sendForm(form, url, resultEl) {
+  resultEl.textContent = 'Processando...';
+  const data = new FormData(form);
+  const effect = form.querySelector('select').value;
+  const res = await fetch(`${url}?effect=${encodeURIComponent(effect)}`, {
+    method: 'POST',
+    body: data
+  });
+  const json = await res.json();
+  resultEl.textContent = '';
+  if (json.success) {
+    if (url.includes('image')) {
+      const img = document.createElement('img');
+      img.src = json.file;
+      resultEl.appendChild(img);
+    } else {
+      const video = document.createElement('video');
+      video.controls = true;
+      video.src = json.file;
+      resultEl.appendChild(video);
+    }
+    const link = document.createElement('a');
+    link.href = json.file;
+    link.textContent = 'Baixar arquivo processado';
+    link.target = '_blank';
+    resultEl.appendChild(link);
+  } else {
+    resultEl.textContent = `Erro: ${json.error}`;
+  }
+}
+
+document.getElementById('imgForm').addEventListener('submit', e => {
+  e.preventDefault();
+  sendForm(e.target, '/api/image', document.getElementById('imgResult'));
+});
+
+document.getElementById('vidForm').addEventListener('submit', e => {
+  e.preventDefault();
+  sendForm(e.target, '/api/video', document.getElementById('vidResult'));
+});
+
+// Populate effect selectors
+fetch('/api/effects')
+  .then(r => r.json())
+  .then(effects => {
+    const imgSel = document.getElementById('imgEffect');
+    const vidSel = document.getElementById('vidEffect');
+    effects.image.forEach(effect => {
+      imgSel.appendChild(new Option(effect, effect));
+    });
+    effects.video.forEach(effect => {
+      vidSel.appendChild(new Option(effect, effect));
+    });
+  });
+</script>
+</body>
+</html>
